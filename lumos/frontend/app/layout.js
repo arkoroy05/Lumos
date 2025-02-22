@@ -1,5 +1,10 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { headers } from "next/headers";
+import { cookieToInitialState } from "wagmi";
+import { getConfig } from "./config";
+import { Providers } from "./providers";
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,12 +22,19 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const initialState = cookieToInitialState(
+    getConfig(),
+    headers().get("cookie")
+  );
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+         <Providers initialState={initialState}>
+        <Navbar />
+          
+          {children}</Providers>
       </body>
     </html>
   );
